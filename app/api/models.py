@@ -3,7 +3,6 @@ from django.contrib.auth.models import (AbstractBaseUser,
                                         BaseUserManager,
                                         PermissionsMixin)
 from django.core.validators import validate_email
-# Create your models here.
 
 
 class UserManager(BaseUserManager):
@@ -34,3 +33,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class Exercise(models.Model):
+    #Exercise object
+    name = models.CharField(max_length=255)
+    sets = models.PositiveIntegerField()
+    reps = models.PositiveIntegerField()
+    weight = models.CharField(max_length=50)
+    description = models.TextField(max_length=500, null=True, blank=True)
+    link = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.name
+

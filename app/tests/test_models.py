@@ -3,10 +3,10 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
+from api.models import Exercise
 
 
 CREATE_USER_URL = reverse('user:create')
-# TOKEN_URL = reverse('user:token')
 
 
 class ModelTests(TestCase):
@@ -92,31 +92,16 @@ class PublicUser(TestCase):
         ).exists()
         self.assertFalse(user_exist)
 
-    # def test_creating_token_for_user(self):
-    #     user_credentials = {
-    #         'name': 'test',
-    #         'email': 'test@example.com',
-    #         'password': 'testpassword123',
-    #     }
 
-    #     create_user(**user_credentials)
+class ExerciseModelTest(TestCase):
 
-    #     payload = {
-    #         'email': user_credentials['email'],
-    #         'password': user_credentials['password']
-    #     }
+    def test_create_exercise(self):
+        exercise = Exercise.objects.create(
+            name = 'testexercise',
+            sets = 5,
+            reps = 5,
+            weight = '50kg',
+            description = 'just a test description to test....',
+        )
 
-    #     result = self.client.post(TOKEN_URL, payload)
-
-    #     self.assertIn('token', result.data)
-    #     self.assertEqual(result.status_code, status.HTTP_200_OK)
-
-    # def test_creating_token_error(self):
-    #     create_user(email='test@example.com', password='goodpasword123')
-
-    #     payload = {'email':'test@example.com', 'password': 'badpassword'}
-    #     result = self.client.post(TOKEN_URL, payload)
-
-    #     self.assertNotIn('token', result.data)
-    #     self.assertEqual(result.status_code, status.HTTP_400_BAD_REQUEST)
-    
+        self.assertEqual(str(exercise), exercise.name)
