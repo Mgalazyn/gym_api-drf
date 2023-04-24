@@ -22,5 +22,7 @@ urlpatterns = [
     #Configuration for api documentation by swagger
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path('api/documentation/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-documentation'),
+    #apps endpoints
     path('api/user/', include('api.urls')),
+    path('api/exercise/', include('exercise.urls')),
 ]

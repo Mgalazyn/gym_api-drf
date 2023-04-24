@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'config',
     'drf_spectacular',
+    'exercise',
 ]
 
 MIDDLEWARE = [

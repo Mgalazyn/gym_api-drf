@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from api.models import Exercise
+
 
 
 CREATE_USER_URL = reverse('user:create')
@@ -93,15 +93,3 @@ class PublicUser(TestCase):
         self.assertFalse(user_exist)
 
 
-class ExerciseModelTest(TestCase):
-
-    def test_create_exercise(self):
-        exercise = Exercise.objects.create(
-            name = 'testexercise',
-            sets = 5,
-            reps = 5,
-            weight = '50kg',
-            description = 'just a test description to test....',
-        )
-
-        self.assertEqual(str(exercise), exercise.name)

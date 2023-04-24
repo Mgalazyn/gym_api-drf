@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 import re
+from api.models import Exercise
 
 
 class UserSerializer(serializers.ModelSerializer):
