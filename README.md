@@ -27,7 +27,12 @@ Create a file called .env and add the following environment variables:
 
 ```bash
 DEBUG = 1
-SECRET_KEY = your_secret_key_here
+DB_HOST= your_db_host
+DB_NAME= your_db_name
+DB_USER= your_db_user
+DB_PASS= your_db_password
+SECRET_KEY= your_secret_key
+
 ```
 
 Build and run the Docker containers:
