@@ -1,7 +1,8 @@
 
 # gym_api-drf
 
-IN PROGRESS - still building this app
+![tesx](https://user-images.githubusercontent.com/91530764/233931541-a75336bf-8865-4f1b-994a-c28c5c2d4b6e.png)
+
 
 This project is a RESTful API built with Python, Django, and Django REST Framework to manage a gym's memberships and classes. It uses Docker for containerization and Postgresql for data storage.
 
