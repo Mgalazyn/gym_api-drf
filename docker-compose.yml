@@ -4,33 +4,33 @@ services:
   app:
     build:
       context: .
-      env_file:
-        - .env
       args:
         - DEV=true
     ports:
       - "8000:8000"
     volumes:
       - ./app:/app
-    env_file:
-      - .env
     command: >
       sh -c "python manage.py wait_for_db &&
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=gym_api_db
+      - DB_USER=devuser
+      - DB_PASS=devpassword
+      - SECRET_KEY=django-insecure-e#5y5jrtc+r%h+h3eng!6kebg-$bhk!m7vxg3bddlq!qpbmui+
+
     depends_on:
       - db
   
   db:
     image: postgres:15-alpine
-    env_file:
-      - .env
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=gym_api_db
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=devpassword
-
 volumes:
   dev-db-data:
