@@ -1,15 +1,16 @@
 from django.shortcuts import render
+from rest_framework.response import Response
 from api.models import Exercise
-from api.permissions import AdminPermissions
 from rest_framework import viewsets
-from exercise.serializers import ExerciseSerializer, ExerciseDetailsSerializer
+from exercise import serializers
 
 
 class ExerciseViewSet(viewsets.ModelViewSet):
-    serializer_class = ExerciseSerializer
+    serializer_class = serializers.ExerciseDetailsSerializer
     queryset = Exercise.objects.all()
     
     def get_serializer_class(self):
         if self.action == 'list':
-            return ExerciseSerializer
+            return serializers.ExerciseSerializer
         return self.serializer_class
+    

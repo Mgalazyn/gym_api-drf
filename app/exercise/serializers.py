@@ -11,4 +11,4 @@ class ExerciseSerializer(serializers.ModelSerializer):
 class ExerciseDetailsSerializer(ExerciseSerializer):
 
     class Meta(ExerciseSerializer.Meta):
-        fields = ExerciseSerializer.Meta.fields
+        fields = ExerciseSerializer.Meta.fields + ['description', 'link']

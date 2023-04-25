@@ -7,7 +7,7 @@ from rest_framework.test import APIClient
 from api.models import Exercise
 from exercise.serializers import ExerciseSerializer, ExerciseDetailsSerializer
 
-
+EXERCISES_URL = reverse('exercise:exercise-list')
 
 def create_exercise(**params):
     details = {
@@ -23,14 +23,24 @@ def create_exercise(**params):
     return exercise
 
  
+def exercise_url(exercise_id):
+    return reverse('exercise:exercise-detail', args=[exercise_id])
+
+
+def create_user(**params):
+    return get_user_model().objects.create_user(**params)
+
+
 class ExerciseModelAPITests(TestCase):
     #testing exercise models
+    def set_up(self):
+        self.user = create_user(email='test@example.com', password='testpass123')
+
     def test_retrive_exercise_list(self):
         create_exercise()
         create_exercise()
 
-        result = self.client.get('http://127.0.0.1:8000/api/exercise/exercises/')
-
+        result = self.client.get(EXERCISES_URL)
         exercises = Exercise.objects.all()
         serializer = ExerciseSerializer(exercises, many=True)
         
@@ -38,11 +48,53 @@ class ExerciseModelAPITests(TestCase):
         self.assertEqual(result.data, serializer.data)
 
 
-    # def test_get_exercise_details(self):
-    #     exercise = create_exercise()
-    #     url = f'http://127.0.0.1:8000/api/exercise/exercises/<str:{exercise.name}>'
+    def test_exercise_details(self):
+        #tessting  getting details about exercise
+        exercise = create_exercise()
+        url = exercise_url(exercise.id)
+        result = self.client.get(url)
+        serializer = ExerciseDetailsSerializer(exercise)
 
-    #     result = self.client.get(url)
+        self.assertEqual(result.data, serializer.data)
 
-    #     serializer = ExerciseDetailsSerializer(exercise)
-    #     self.assertEqual(result.data, serializer.data)
+    def test_create_exercise(self):
+        #testing creating exercise through api instead help funcs in tests
+        credentials = {
+            'name': 'test-exercise',
+            'sets': 5,
+            'reps': 5,
+            'weight': '50test',
+        }
+        result = self.client.post(EXERCISES_URL, credentials)
+        self.assertEqual(result.status_code, status.HTTP_201_CREATED)
+
+    def test_partial_update_exercise(self):
+        #testing partial update of exercise, with just required fields
+        exercise = create_exercise()
+
+        update_credentials = {
+            'name': 'updated-test-exercise',
+            'sets': 10,
+            'reps': 10,
+            'weight': 'new50test',
+        }
+        
+        url = exercise_url(exercise.id)
+        content_type = 'application/json'
+        result = self.client.patch(url, data=update_credentials, content_type=content_type)
+        self.assertEqual(result.status_code, status.HTTP_200_OK)
+        exercise.refresh_from_db()
+        self.assertEqual(exercise.name, update_credentials['name'])
+        self.assertEqual(exercise.sets, update_credentials['sets'])
+        self.assertEqual(exercise.reps, update_credentials['reps'])
+        self.assertEqual(exercise.weight, update_credentials['weight'])
+
+
+    def test_delete_exercise(self):
+        #TESTING deleteing exercise
+        exercise = create_exercise()
+        url = exercise_url(exercise.id)
+        result = self.client.delete(url)
+
+        self.assertEqual(result.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Exercise.objects.filter(id=exercise.id).exists())
