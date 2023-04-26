@@ -3,10 +3,19 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-
+from api.serializers import UserSerializer
 
 
 CREATE_USER_URL = reverse('user:create')
+
+
+#help funcs for creating user through API for testing
+def create_user(**kwargs):
+    return get_user_model().objects.create_user(**kwargs)
+
+
+def user_url(user_id):
+    return reverse('user:user-detail', args=[user_id])
 
 
 class ModelTests(TestCase):
@@ -39,11 +48,6 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
-
-
-#help func for creating user through API for testing
-def create_user(**kwargs):
-    return get_user_model().objects.create_user(**kwargs)
 
 
 class PublicUser(TestCase):
@@ -92,4 +96,18 @@ class PublicUser(TestCase):
         ).exists()
         self.assertFalse(user_exist)
 
+
+    def test_viewing_user_details(self):
+        credentials = {
+            'email': 'test@example.com',
+            'password': 'testpass123',
+            'name': 'test',
+        }
+
+        user = create_user(**credentials)
+        url = user_url(user.id)
+        result = self.client.get(url)
+        serializer = UserSerializer(user)
+
+        self.assertEqual(result.data, serializer.data)
 

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'config',
     'drf_spectacular',
     'exercise',
+    'plan',
 ]
 
 MIDDLEWARE = [

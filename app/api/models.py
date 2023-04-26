@@ -47,3 +47,10 @@ class Exercise(models.Model):
     def __str__(self):
         return self.name
 
+
+class Plan(models.Model):
+    name = models.CharField(max_length=255)
+    exercises = models.ManyToManyField('Exercise')
+
+    def __str__(self):
+        return self.name

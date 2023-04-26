@@ -25,4 +25,5 @@ urlpatterns = [
     #apps endpoints
     path('api/user/', include('api.urls')),
     path('api/exercise/', include('exercise.urls')),
+    path('api/plan/', include('plan.urls'))
 ]
