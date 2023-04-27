@@ -4,7 +4,7 @@
 ![tesx](https://user-images.githubusercontent.com/91530764/233931541-a75336bf-8865-4f1b-994a-c28c5c2d4b6e.png)
 
 
-This project is a RESTful API built with Python, Django, and Django REST Framework to manage a gym's memberships and classes. It uses Docker for containerization and Postgresql for data storage.
+This project is a RESTful API built with Python, Django, and Django REST Framework to manage a gym's memberships and classes. It uses Docker for containerization and Postgresql for data storage. Developed in spirit in the of TDD. Test written mostly in unitest, django.tests and with rest_framework.test,
 
 
 ## Getting Started
@@ -22,7 +22,9 @@ Change into the project directory:
 ```bash
   cd gym_api-drf
 ```
-
+```bash
+  pip install -r requirements.txt
+```
 Create a file called .env and add the following environment variables:
 
 ```bash
@@ -44,7 +46,7 @@ docker-compose up -d --build
 To run tests, run the following command
 
 ```bash
-  docker-compose app run sh -c "python manage.py test"
+  docker-compose app --rm run sh -c 'python manage.py'
 ```
 
 
