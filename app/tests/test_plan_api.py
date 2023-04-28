@@ -80,3 +80,25 @@ class PlanModelAPITests(TestCase):
 
         self.assertEqual(result.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(models.Plan.objects.filter(id=plan.id).exists())
+
+    def test_updating_plan(self):
+        #testing updating plan
+        plan = models.Plan.objects.create(name='test plan1')
+
+        credentials = {'name': 'test plan updated'}
+        url = plan_url(plan.id)
+        content_type = 'application/json'
+        result = self.client.patch(url, data=credentials, content_type=content_type)
+
+        self.assertEqual(result.status_code, status.HTTP_200_OK)
+        plan.refresh_from_db()
+        self.assertEqual(plan.name, credentials['name'])
+
+    def test_deleting_plan(self):
+        #Testing deleting plan
+        plan = models.Plan.objects.create(name='testplan1')
+        url = plan_url(plan.id)
+        result = self.client.delete(url)
+        
+        self.assertEqual(result.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(models.Plan.objects.filter(id=plan.id).exists())
