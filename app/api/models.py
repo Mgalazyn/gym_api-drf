@@ -3,6 +3,16 @@ from django.contrib.auth.models import (AbstractBaseUser,
                                         BaseUserManager,
                                         PermissionsMixin)
 from django.core.validators import validate_email
+import uuid
+import os
+
+
+def user_image_file_path(instance, filename):
+    #genereating file path for user image
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'user', filename)
 
 
 class UserManager(BaseUserManager):
@@ -27,6 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=250)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    image = models.ImageField(null=True, upload_to=user_image_file_path)
 
     objects = UserManager()
     USERNAME_FIELD = 'email'

@@ -5,7 +5,7 @@ from api.models import Exercise
 class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
-        fields = ['name','sets', 'reps','weight']
+        fields = ['name','sets', 'reps', 'weight']
         
 
 class ExerciseDetailsSerializer(ExerciseSerializer):

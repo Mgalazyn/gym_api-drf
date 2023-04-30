@@ -102,3 +102,5 @@ class PlanModelAPITests(TestCase):
         
         self.assertEqual(result.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(models.Plan.objects.filter(id=plan.id).exists())
+
+    

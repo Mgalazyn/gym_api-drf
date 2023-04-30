@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 import re
-from api.models import Exercise
+from api.models import Exercise, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,3 +28,18 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         
         return user
+    
+class UserImageSerializer(serializers.ModelSerializer):
+    #serializer for uploading images for user
+
+    class Meta:
+        model = User
+        fields = ['id', 'image']
+        read_only_fields = ['id']
+        extra_kwargs = {'image': {'required': 'True'}}
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = fields = ['email', 'password', 'name', 'image']

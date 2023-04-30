@@ -4,6 +4,11 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from api.serializers import UserSerializer
+from unittest.mock import patch
+from api import models
+import os 
+import tempfile
+from PIL import Image
 
 
 CREATE_USER_URL = reverse('user:create')
@@ -15,7 +20,13 @@ def create_user(**kwargs):
 
 
 def user_url(user_id):
+    #genereate url for vewing user details
     return reverse('user:user-detail', args=[user_id])
+
+
+def image_upload_url(user_id):
+    #creating and return url for uploading image
+    return reverse('user:user-upload-image', args=[user_id])
 
 
 class ModelTests(TestCase):
@@ -53,7 +64,7 @@ class ModelTests(TestCase):
 class PublicUser(TestCase):
     def set_up(self):
         self.client = APIClient()
-
+        
     def test_creating_user_successful(self):
         credentials = {
             'email': 'test@example.com',
@@ -111,3 +122,54 @@ class PublicUser(TestCase):
 
         self.assertEqual(result.data, serializer.data)
 
+
+    @patch('api.models.uuid.uuid4')
+    def test_user_file_name_uuid(self, mock_uuid):
+        #testing generate image path
+        uuid = 'test-uuid'
+        mock_uuid.return_value = uuid
+        file_path = models.user_image_file_path(None, 'example.jpg')
+        self.assertEquals(file_path, f"uploads\\user\\{uuid}.jpg")
+
+
+class ImageUploadTests(TestCase):
+    def tear_down(self):
+        self.user.image.delete()
+
+    def test_upload_image(self):
+        #testing uploading image for user
+        credentials = {
+                    'email': 'test@example.com',
+                    'password': 'testpass123',
+                    'name': 'test',
+                }
+        self.user = create_user(**credentials)
+
+        url = image_upload_url(self.user.id)
+        with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
+            img = Image.new('RGB', (10, 10))
+            img.save(image_file, format='JPEG')
+            image_file.seek(0)
+            payload = {'image': image_file}
+            result = self.client.post(url, payload, format='multipart')
+
+        self.user.refresh_from_db()
+        self.assertEqual(result.status_code, status.HTTP_200_OK)
+        self.assertIn('image', result.data)
+        self.assertTrue(os.path.exists(self.user.image.path))
+
+    def test_upload_image_bad_request(self):
+        #testing invalid image
+        credentials = {
+            'email': 'test@example.com',
+            'password': 'testpass123',
+            'name': 'test',
+        }
+        self.user = create_user(**credentials)
+
+        url = image_upload_url(self.user.id)
+        payload = {'image': 'notanimage'}
+        result = self.client.post(url, payload, format='multipart')
+
+        self.assertEqual(result.status_code, status.HTTP_400_BAD_REQUEST)
+        
