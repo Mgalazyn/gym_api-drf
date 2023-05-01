@@ -3,8 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from rest_framework import status
-from rest_framework.test import APIClient
-from api.models import Exercise
+from api.models import Exercise, Tag
 from exercise.serializers import ExerciseSerializer, ExerciseDetailsSerializer
 
 EXERCISES_URL = reverse('exercise:exercise-list')
@@ -98,3 +97,58 @@ class ExerciseModelAPITests(TestCase):
 
         self.assertEqual(result.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Exercise.objects.filter(id=exercise.id).exists())
+
+    def test_creating_exercise_with_tags(self):
+        #test creating exercise with tag
+
+        payload = {
+            'name': 'test-exercise',
+            'sets': 5,
+            'reps': 5,
+            'weight': '50test',
+            'tag': [{'name': 'chest'}]
+        }
+
+        result = self.client.post(EXERCISES_URL, payload, format='JSON')
+
+        self.assertEqual(result.status_code, status.HTTP_201_CREATED)
+        exercises = Exercise.objects.filter()
+        self.assertEqual(exercises.count(), 1)
+
+    # def test_create_tag_update(self):
+    #     #test creating tag when updating a exercise
+    #     exercise = create_exercise()
+
+    #     payload = {'tag': [{'name': 'Chest'}]}
+    #     url = exercise_url(exercise.id)
+    #     result = self.client.patch(url, payload, format='JSON')
+
+    #     self.assertEqual(result.status_code, status.HTTP_200_OK)
+    #     new_tag = Tag.objects.get(name='Chest')
+    #     self.assertIn(new_tag, exercise.tag.all())
+
+    # def test_update_tag_on_exsisting_exercise(self):
+    #     tag_chest = Tag.objects.create(name='Chest')
+    #     exercise = create_exercise()
+    #     exercise.tag.add(tag_chest)
+
+    #     tag_shoulders = Tag.objects.create(name='Shoulders')
+    #     payload = {'tag': [{'name': 'Shoulders'}]}
+    #     url = exercise_url(exercise.id)
+    #     result = self.client.patch(url, payload, format='JSON')
+
+    #     self.assertEqual(result.status_code, status.HTTP_200_OK)
+    #     self.assertIn(tag_shoulders, exercise.tag.all())
+    #     self.assertNotIn(tag_chest, exercise.tag.all())
+
+    # def test_clear_exercise_tag(self):
+    #     tag = Tag.objects.create(name='test tag')
+    #     exercise = create_exercise()
+    #     exercise.tag.add(tag)
+
+    #     payload = {'tag': []}
+    #     url = exercise_url(exercise.id)
+    #     result = self.client.patch(url, payload, format='JSON')
+
+    #     self.assertEqual(result.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(exercise.tag.count(), 0)

@@ -18,6 +18,8 @@ CREATE_USER_URL = reverse('user:create')
 def create_user(**kwargs):
     return get_user_model().objects.create_user(**kwargs)
 
+def create_user_default(email='test@example.com', password='testpassword123'):
+    return get_user_model().objects.create_user(email, password)
 
 def user_url(user_id):
     #genereate url for vewing user details
@@ -133,6 +135,7 @@ class PublicUser(TestCase):
 
 
 class ImageUploadTests(TestCase):
+    #test for image model
     def tear_down(self):
         self.user.image.delete()
 
@@ -172,4 +175,14 @@ class ImageUploadTests(TestCase):
         result = self.client.post(url, payload, format='multipart')
 
         self.assertEqual(result.status_code, status.HTTP_400_BAD_REQUEST)
-        
+
+
+class TagsTests(TestCase): 
+    #testing tag model
+    def test_create_tag(self):
+        #creating tags for exercise, checking succesfull
+        user = create_user_default()
+        tag = models.Tag.objects.create(user=user, name='test-tag')
+
+        self.assertEqual(str(tag), tag.name)
+

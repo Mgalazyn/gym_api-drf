@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 import re
-from api.models import Exercise, User
+from api.models import Exercise, User, Tag
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,4 +42,6 @@ class UserImageSerializer(serializers.ModelSerializer):
 class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = fields = ['email', 'password', 'name', 'image']
+        fields = ['email', 'password', 'name', 'image']
+
+

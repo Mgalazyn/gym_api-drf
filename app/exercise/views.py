@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from api.models import Exercise
-from rest_framework import viewsets
+from api.models import Exercise, Tag
+from rest_framework import viewsets, mixins
 from exercise import serializers
 
 
@@ -13,4 +13,13 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return serializers.ExerciseSerializer
         return self.serializer_class
+    
+
+class TagViewSet(mixins.UpdateModelMixin, 
+                 mixins.DestroyModelMixin,
+                 mixins.ListModelMixin, 
+                 viewsets.GenericViewSet):
+    serializer_class = serializers.TagSerializer
+    queryset = Tag.objects.all()
+
     

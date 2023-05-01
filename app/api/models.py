@@ -5,7 +5,7 @@ from django.contrib.auth.models import (AbstractBaseUser,
 from django.core.validators import validate_email
 import uuid
 import os
-
+from django.conf import settings
 
 def user_image_file_path(instance, filename):
     #genereating file path for user image
@@ -54,6 +54,7 @@ class Exercise(models.Model):
     weight = models.CharField(max_length=50)
     description = models.TextField(max_length=500, null=True, blank=True)
     link = models.CharField(max_length=255, blank=True)
+    tag = models.ManyToManyField('Tag')
 
     def __str__(self):
         return self.name
@@ -62,6 +63,18 @@ class Exercise(models.Model):
 class Plan(models.Model):
     name = models.CharField(max_length=255)
     exercises = models.ManyToManyField('Exercise')
+
+    def __str__(self):
+        return self.name
+    
+
+class Tag(models.Model):
+    #tag for filtering exercises
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return self.name
