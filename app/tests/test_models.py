@@ -181,8 +181,7 @@ class TagsTests(TestCase):
     #testing tag model
     def test_create_tag(self):
         #creating tags for exercise, checking succesfull
-        user = create_user_default()
-        tag = models.Tag.objects.create(user=user, name='test-tag')
+        tag = models.Tag.objects.create(name='test-tag')
 
         self.assertEqual(str(tag), tag.name)
 

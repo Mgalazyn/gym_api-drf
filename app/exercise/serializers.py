@@ -16,33 +16,33 @@ class ExerciseSerializer(serializers.ModelSerializer):
         model = Exercise
         fields = ['name','sets', 'reps', 'weight', 'tag']
 
-    # def _get_or_create_tag(self, tag, exercise):
-    #     for i in tag:
-    #         i_obj, created = Tag.objects.get_or_create(
-    #             **i,
-    #         )
-    #         exercise.tag.add(i_obj)
+    def _get_or_create_tags(self, tag, exercise):
+        """Handle getting or creating tags as needed."""
+        for t in tag:
+            tag_obj, created = Tag.objects.get_or_create(
+                **t,
+            )
+            exercise.tag.add(tag_obj)
 
-    # def create(self, validated_data):
-    #     #creating exercise
-    #     tag = validated_data.pop('tag', [])
-    #     exercise = Exercise.objects.create(**validated_data)
-    #     self._get_or_create_tag(tag, exercise)
+    def create(self, validated_data):
+        """Create a exercise."""
+        tag = validated_data.pop('tag')
+        exercise = Exercise.objects.create(**validated_data)
+        self._get_or_create_tags(tag, exercise)
 
-    #     return exercise
+        return exercise
     
-    # def update(self, instance, validated_data):
-    #     tag = validated_data.pop('tag', None)
-    #     if tag is not None:
-    #         instance.tag.clear()
-    #         self._get_or_create_tag(tag, instance)
+    def update(self, instance, validated_data):
+        tag = validated_data.pop('tag', None)
+        if tag is not None:
+            instance.tag.clear()
+            self._get_or_create_tags(tag, instance)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
 
-    #     for attr, value in validated_data.items():
-    #         setattr(instance, attr, value)
-
-    #     instance.save()
-    #     return instance
-
+        instance.save()
+        return 
+    
 class ExerciseDetailsSerializer(ExerciseSerializer):
 
     class Meta(ExerciseSerializer.Meta):

@@ -10,9 +10,9 @@ from exercise.serializers import TagSerializer
 TAGS_URL = reverse('exercise:tag-list')
 
 #help funcs
-def create_user(email='user@example.com', password='testpass123'):
-    """Create and return a user."""
-    return get_user_model().objects.create_user(email=email, password=password)
+# def create_user(email='user@example.com', password='testpass123'):
+#     """Create and return a user."""
+#     return get_user_model().objects.create_user(email=email, password=password)
 
 def tag_url(tag_id):
     return reverse('exercise:tag-detail', args=[tag_id])
@@ -21,14 +21,14 @@ def tag_url(tag_id):
 class TagModelAPITest(TestCase):
     #testing api requests for tags
     def setUp(self):
-        self.user = create_user()
+        # self.user = create_user()
         self.client = APIClient()
 
     def test_retrive_tags(self):
         #testing retriving list of tags
 
-        models.Tag.objects.create(user=self.user, name='chest')
-        models.Tag.objects.create(user=self.user, name='back')
+        models.Tag.objects.create(name='chest')
+        models.Tag.objects.create(name='back')
 
         result = self.client.get(TAGS_URL)
 
@@ -39,11 +39,10 @@ class TagModelAPITest(TestCase):
         self.assertEqual(result.data, serializer.data)
     
     def test_tags_limited_to_user(self):
-        #testing list of tags is limited to authenitacted user
+        #testing list of tags
 
-        user2 = create_user(email='test@example.com', password='testpass123')
-        models.Tag.objects.create(user=user2, name='shoulders')
-        tag = models.Tag.objects.create(user=self.user, name='shoulders')
+        models.Tag.objects.create(name='shoulders')
+        tag = models.Tag.objects.create(name='shoulders')
         
         result = self.client.get(TAGS_URL)
 
@@ -52,7 +51,7 @@ class TagModelAPITest(TestCase):
 
     def test_updating_tag(self):
         #testing updating tag
-        tag = models.Tag.objects.create(user=self.user, name='chest')
+        tag = models.Tag.objects.create(name='chest')
 
         credentails = {'name': 'chest updated'}
         url = tag_url(tag.id)
@@ -63,11 +62,11 @@ class TagModelAPITest(TestCase):
         self.assertEqual(tag.name, credentails['name'])
 
     def test_deleting_tag(self):
-        tag = models.Tag.objects.create(user=self.user, name='chest')
+        tag = models.Tag.objects.create(name='chest')
         url = tag_url(tag.id)
         result = self.client.delete(url)
     
         self.assertEqual(result.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(models.Tag.objects.filter(user=self.user).exists())
+        self.assertFalse(models.Tag.objects.filter().exists())
 
     

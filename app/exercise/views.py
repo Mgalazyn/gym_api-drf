@@ -15,11 +15,9 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         return self.serializer_class
     
 
-class TagViewSet(mixins.UpdateModelMixin, 
-                 mixins.DestroyModelMixin,
-                 mixins.ListModelMixin, 
-                 viewsets.GenericViewSet):
+class TagViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TagSerializer
     queryset = Tag.objects.all()
+
 
     
