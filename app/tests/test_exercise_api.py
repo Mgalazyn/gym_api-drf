@@ -116,4 +116,3 @@ class ExerciseModelAPITests(TestCase):
         self.assertEqual(result.status_code, status.HTTP_201_CREATED)
         exercises = Exercise.objects.filter()
         self.assertEqual(exercises.count(), 1)
-
