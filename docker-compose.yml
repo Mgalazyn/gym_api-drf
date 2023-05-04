@@ -21,7 +21,8 @@ services:
       - DB_USER=devuser
       - DB_PASS=devpassword
       - SECRET_KEY=django-insecure-e#5y5jrtc+r%h+h3eng!6kebg-$bhk!m7vxg3bddlq!qpbmui+
-
+      - DEBUG=1
+      
     depends_on:
       - db
   
