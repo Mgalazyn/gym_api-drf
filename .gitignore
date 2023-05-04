@@ -1,6 +1,7 @@
 gym_api_venv/
 .env
 .docker-compose.yml
+uploads/
 
 ### Django ###
 *.log
