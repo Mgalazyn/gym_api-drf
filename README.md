@@ -1,10 +1,9 @@
 
 # gym_api-drf
 
-![tesx](https://user-images.githubusercontent.com/91530764/233931541-a75336bf-8865-4f1b-994a-c28c5c2d4b6e.png)
 
+This project is a RESTful API built with Python, Django, and Django REST Framework to manage a gym's memberships and classes. Setting up a project using Docker for containerization and Postgresql for data storage. Developed in spirit in the of TDD. Test written mostly in unitest, django.tests and with rest_framework.test. Added endpoints for creating and managing users, tags, exercises, plans. Possiblity to upload images of user. For profile, as a trainer or client. Prepared code for server deployment. I have enjoyed this, especially creating whole code with TDD.
 
-This project is a RESTful API built with Python, Django, and Django REST Framework to manage a gym's memberships and classes. It uses Docker for containerization and Postgresql for data storage. Developed in spirit in the of TDD. Test written mostly in unitest, django.tests and with rest_framework.test,
 
 
 ## Getting Started
