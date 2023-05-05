@@ -22,9 +22,9 @@ class ExerciseDetailsSerializer(ExerciseSerializer):
     class Meta(ExerciseSerializer.Meta):
         fields = ExerciseSerializer.Meta.fields + ['description', 'link']
 
-    def create(self, validated_data):
-        tag_data = validated_data.pop('tag')
-        exercise = Exercise.objects.create(**validated_data)
-        for t_data in tag_data:
-            Exercise.objects.create(exercise, **t_data)
-        return exercise
+    # def create(self, validated_data):
+    #     tag_data = validated_data.pop('tag')
+    #     exercise = Exercise.objects.create(**validated_data)
+    #     for t_data in tag_data:
+    #         Exercise.objects.create(exercise, **t_data)
+    #     return exercise
